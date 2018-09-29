@@ -57,7 +57,6 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
         miBoton.addTarget(self, action: #selector(moverMotor(_:)), for: .touchDown)
         miBoton.addTarget(self, action: #selector(pararMotor), for: .touchUpInside)
         miBoton.addTarget(self, action: #selector(pararMotor), for: .touchUpOutside)
-        miBoton.backgroundColor = .orange
         miBoton.translatesAutoresizingMaskIntoConstraints = false
         return miBoton
     }()
@@ -69,7 +68,6 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
         miBoton.addTarget(self, action: #selector(moverMotor(_:)), for: .touchDown)
         miBoton.addTarget(self, action: #selector(pararMotor), for: .touchUpInside)
         miBoton.addTarget(self, action: #selector(pararMotor), for: .touchUpOutside)
-        miBoton.backgroundColor = .yellow
         miBoton.translatesAutoresizingMaskIntoConstraints = false
         return miBoton
     }()
