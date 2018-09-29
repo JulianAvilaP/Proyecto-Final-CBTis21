@@ -43,15 +43,58 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
         return miSwitch
     }()
     
+    let containerView: UIView = {
+       let miVista = UIView()
+        miVista.backgroundColor = .red
+        miVista.translatesAutoresizingMaskIntoConstraints = false
+        return miVista
+    }()
+    
+    lazy var botonMoverDerecha: UIButton = {
+       let miBoton = UIButton()
+        miBoton.tag = 1
+        miBoton.titleLabel?.text = "Derecha"
+        miBoton.addTarget(self, action: #selector(moverMotor(_:)), for: .touchDown)
+        miBoton.addTarget(self, action: #selector(pararMotor), for: .touchUpInside)
+        miBoton.translatesAutoresizingMaskIntoConstraints = false
+        return miBoton
+    }()
+    
+    lazy var botonMoverIzquierda: UIButton = {
+        let miBoton = UIButton()
+        miBoton.tag = 2
+        miBoton.titleLabel?.text = "Izquierda"
+        miBoton.addTarget(self, action: #selector(moverMotor(_:)), for: .touchDown)
+        miBoton.addTarget(self, action: #selector(pararMotor), for: .touchUpInside)
+        miBoton.translatesAutoresizingMaskIntoConstraints = false
+        return miBoton
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(switchAnunciar)
         view.addSubview(switchDatos)
+        view.addSubview(containerView)
+        view.addSubview(botonMoverDerecha)
+        view.addSubview(botonMoverIzquierda)
         acomodarVistas()
         self.peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
         view.backgroundColor = .red
         motionManager.startAccelerometerUpdates()
         timer = Timer.scheduledTimer(timeInterval: 1/10, target: self, selector: #selector(imprimirDatosAcelerometro), userInfo: nil, repeats: true)
+    }
+    
+    @objc func moverMotor(_ sender: UIButton) {
+        if sender.tag == 1 {
+             peripheralManager?.updateValue("1".data(using: .utf8)!, for: caracteristica, onSubscribedCentrals: nil)
+        }
+        if sender.tag == 2 {
+             peripheralManager?.updateValue("2".data(using: .utf8)!, for: caracteristica, onSubscribedCentrals: nil)
+        }
+    }
+    
+    @objc func pararMotor() {
+         peripheralManager?.updateValue("0".data(using: .utf8)!, for: caracteristica, onSubscribedCentrals: nil)
     }
     
     @objc func imprimirDatosAcelerometro() {
@@ -83,6 +126,20 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
     
         switchDatos.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         switchDatos.topAnchor.constraint(equalTo: switchAnunciar.topAnchor, constant: 40).isActive = true
+        
+        containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        containerView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        containerView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        containerView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/3).isActive = true
+        
+        botonMoverIzquierda.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
+        botonMoverIzquierda.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 1/2).isActive = true
+        botonMoverIzquierda.leftAnchor.constraint(equalTo: containerView.leftAnchor).isActive = true
+        
+        botonMoverDerecha.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
+        botonMoverDerecha.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 1/2).isActive = true
+        botonMoverDerecha.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
+        
     }
     
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
