@@ -45,7 +45,7 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
     
     let containerView: UIView = {
        let miVista = UIView()
-        miVista.backgroundColor = .red
+        miVista.backgroundColor = .blue
         miVista.translatesAutoresizingMaskIntoConstraints = false
         return miVista
     }()
@@ -53,9 +53,10 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
     lazy var botonMoverDerecha: UIButton = {
        let miBoton = UIButton()
         miBoton.tag = 1
-        miBoton.titleLabel?.text = "Derecha"
+        miBoton.setTitle("Derecha", for: .normal)
         miBoton.addTarget(self, action: #selector(moverMotor(_:)), for: .touchDown)
         miBoton.addTarget(self, action: #selector(pararMotor), for: .touchUpInside)
+        miBoton.backgroundColor = .orange
         miBoton.translatesAutoresizingMaskIntoConstraints = false
         return miBoton
     }()
@@ -63,9 +64,10 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
     lazy var botonMoverIzquierda: UIButton = {
         let miBoton = UIButton()
         miBoton.tag = 2
-        miBoton.titleLabel?.text = "Izquierda"
+        miBoton.setTitle("Izquierda", for: .normal)
         miBoton.addTarget(self, action: #selector(moverMotor(_:)), for: .touchDown)
         miBoton.addTarget(self, action: #selector(pararMotor), for: .touchUpInside)
+        miBoton.backgroundColor = .yellow
         miBoton.translatesAutoresizingMaskIntoConstraints = false
         return miBoton
     }()
@@ -79,7 +81,7 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
         view.addSubview(botonMoverIzquierda)
         acomodarVistas()
         self.peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
-        view.backgroundColor = .red
+        view.backgroundColor = .white
         motionManager.startAccelerometerUpdates()
         timer = Timer.scheduledTimer(timeInterval: 1/10, target: self, selector: #selector(imprimirDatosAcelerometro), userInfo: nil, repeats: true)
     }
@@ -135,10 +137,12 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
         botonMoverIzquierda.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
         botonMoverIzquierda.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 1/2).isActive = true
         botonMoverIzquierda.leftAnchor.constraint(equalTo: containerView.leftAnchor).isActive = true
+        botonMoverIzquierda.topAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
         
         botonMoverDerecha.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
         botonMoverDerecha.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 1/2).isActive = true
         botonMoverDerecha.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
+        botonMoverDerecha.topAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
         
     }
     
