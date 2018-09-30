@@ -22,6 +22,7 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
         CBAdvertisementDataServiceUUIDsKey : [CBUUID.init(string: "43AB60E3-5BD1-481D-BCE0-3D35543E734F")]
     ]
     var seAgregoCaracteristica = false
+    var ultimoDatoEnviado: UInt8 = 0
     
     var caracteristica = CBMutableCharacteristic(type: CBUUID.init(string: "BBD46F87-116D-4770-ADC6-3F8243878F57"), properties: .notify, value: nil, permissions: .readable)
     
@@ -63,9 +64,19 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
         return miBoton
     }()
     
+    let labelEstado: UILabel = {
+       let label = UILabel()
+        label.textAlignment = .center
+        label.text = "Desconectado"
+        label.textColor = .gray
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(switchAnunciar)
+        view.addSubview(labelEstado)
         view.addSubview(containerView)
         view.addSubview(botonMoverDerecha)
         view.addSubview(botonMoverIzquierda)
@@ -93,11 +104,20 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
         if let datosAcelerometro = motionManager.accelerometerData {
             //peripheralManager?.updateValue("\(Float(datosAcelerometro.acceleration.z))".data(using: .utf8)!, for: caracteristica, onSubscribedCentrals: nil)
             if datosAcelerometro.acceleration.x > 0.45 {
+                if ultimoDatoEnviado != 1 {
                  peripheralManager?.updateValue("1".data(using: .utf8)!, for: caracteristica, onSubscribedCentrals: nil)
+                ultimoDatoEnviado = 1
+                }
             } else if datosAcelerometro.acceleration.x < -0.45 {
+                if ultimoDatoEnviado != 2 {
                  peripheralManager?.updateValue("2".data(using: .utf8)!, for: caracteristica, onSubscribedCentrals: nil)
+                ultimoDatoEnviado = 2
+                }
             } else {
+                if ultimoDatoEnviado != 0 {
                  peripheralManager?.updateValue("0".data(using: .utf8)!, for: caracteristica, onSubscribedCentrals: nil)
+                ultimoDatoEnviado = 0
+                }
             }
             
         }
@@ -115,6 +135,9 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
         switchAnunciar.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         switchAnunciar.topAnchor.constraint(equalTo: view.topAnchor, constant: 30).isActive = true
     
+        labelEstado.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        labelEstado.topAnchor.constraint(equalTo: switchAnunciar.bottomAnchor, constant: 50).isActive = true
+        
         containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         containerView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         containerView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
@@ -152,11 +175,13 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
     }
     
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
-        view.backgroundColor = .green
+        labelEstado.text = "Conectado"
+        labelEstado.textColor = .green
     }
     
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic) {
-        view.backgroundColor = .red
+        labelEstado.text = "Desconectado"
+        labelEstado.textColor = .gray
     }
 
 }
