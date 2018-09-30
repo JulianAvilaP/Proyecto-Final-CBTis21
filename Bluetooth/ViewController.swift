@@ -102,6 +102,13 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
     @objc func imprimirDatosAcelerometro() {
         if let datosAcelerometro = motionManager.accelerometerData {
             //peripheralManager?.updateValue("\(Float(datosAcelerometro.acceleration.z))".data(using: .utf8)!, for: caracteristica, onSubscribedCentrals: nil)
+            if datosAcelerometro.acceleration.x > 0.45 {
+                 peripheralManager?.updateValue("1".data(using: .utf8)!, for: caracteristica, onSubscribedCentrals: nil)
+            } else if datosAcelerometro.acceleration.x < -0.45 {
+                 peripheralManager?.updateValue("2".data(using: .utf8)!, for: caracteristica, onSubscribedCentrals: nil)
+            } else {
+                 peripheralManager?.updateValue("0".data(using: .utf8)!, for: caracteristica, onSubscribedCentrals: nil)
+            }
             
         }
     }
