@@ -34,15 +34,6 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
         return miSwitch
     }()
     
-    lazy var switchDatos: UISwitch = {
-        let miSwitch = UISwitch()
-        miSwitch.isEnabled = false
-        miSwitch.onTintColor = .yellow
-        miSwitch.addTarget(self, action: #selector(mandarDato(_:)), for: .valueChanged)
-        miSwitch.translatesAutoresizingMaskIntoConstraints = false
-        return miSwitch
-    }()
-    
     let containerView: UIView = {
        let miVista = UIView()
         miVista.backgroundColor = .blue
@@ -75,7 +66,6 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(switchAnunciar)
-        view.addSubview(switchDatos)
         view.addSubview(containerView)
         view.addSubview(botonMoverDerecha)
         view.addSubview(botonMoverIzquierda)
@@ -121,21 +111,10 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
         }
     }
     
-    @objc func mandarDato(_ sender: UISwitch) {
-        if sender.isOn {
-            peripheralManager?.updateValue("1".data(using: .utf8)!, for: caracteristica, onSubscribedCentrals: nil)
-        } else {
-            peripheralManager?.updateValue("0".data(using: .utf8)!, for: caracteristica, onSubscribedCentrals: nil)
-        }
-    }
-    
     func acomodarVistas() {
         switchAnunciar.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         switchAnunciar.topAnchor.constraint(equalTo: view.topAnchor, constant: 30).isActive = true
     
-        switchDatos.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        switchDatos.topAnchor.constraint(equalTo: switchAnunciar.topAnchor, constant: 40).isActive = true
-        
         containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         containerView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         containerView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
@@ -156,7 +135,6 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         switch peripheral.state {
         case .poweredOn:
-            switchDatos.isEnabled = true
             switchAnunciar.isEnabled = true
             if seAgregoCaracteristica == false {
                 let servicio = CBMutableService(type: CBUUID.init(string: "43AB60E3-5BD1-481D-BCE0-3D35543E734F"), primary: true)
@@ -165,8 +143,6 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
                 seAgregoCaracteristica = true
             }
         case .poweredOff:
-            switchDatos.isOn = false
-            switchDatos.isEnabled = false
             switchAnunciar.isEnabled = false
             peripheralManager?.removeAllServices()
             peripheralManager?.stopAdvertising()
@@ -177,13 +153,10 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
     
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
         view.backgroundColor = .green
-        switchDatos.isEnabled = true
     }
     
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic) {
         view.backgroundColor = .red
-        switchDatos.isOn = false
-        switchDatos.isEnabled = false
     }
 
 }
