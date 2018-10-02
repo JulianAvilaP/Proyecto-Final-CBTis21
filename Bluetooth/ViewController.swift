@@ -35,6 +35,14 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
         return miSwitch
     }()
     
+    lazy var switchEditarPocision: UISwitch = {
+       let miSwitch = UISwitch()
+        miSwitch.isEnabled = true
+        miSwitch.isOn = true
+        miSwitch.translatesAutoresizingMaskIntoConstraints = false
+        return miSwitch
+    }()
+    
     let containerView: UIView = {
        let miVista = UIView()
         miVista.backgroundColor = .blue
@@ -80,6 +88,7 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
         view.addSubview(containerView)
         view.addSubview(botonMoverDerecha)
         view.addSubview(botonMoverIzquierda)
+        view.addSubview(switchEditarPocision)
         acomodarVistas()
         self.peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
         view.backgroundColor = .white
@@ -103,6 +112,7 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
     @objc func imprimirDatosAcelerometro() {
         if let datosAcelerometro = motionManager.accelerometerData {
             //peripheralManager?.updateValue("\(Float(datosAcelerometro.acceleration.z))".data(using: .utf8)!, for: caracteristica, onSubscribedCentrals: nil)
+            if switchEditarPocision.isOn {
             if datosAcelerometro.acceleration.x > 0.45 {
                 if ultimoDatoEnviado != 1 {
                  peripheralManager?.updateValue("1".data(using: .utf8)!, for: caracteristica, onSubscribedCentrals: nil)
@@ -120,6 +130,12 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
                 }
             }
             
+            } else {
+                if ultimoDatoEnviado != 0 {
+                    peripheralManager?.updateValue("0".data(using: .utf8)!, for: caracteristica, onSubscribedCentrals: nil)
+                    ultimoDatoEnviado = 0
+                }
+            }
         }
     }
     
@@ -153,6 +169,8 @@ class ViewController: UIViewController, CBPeripheralManagerDelegate {
         botonMoverDerecha.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
         botonMoverDerecha.topAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
         
+        switchEditarPocision.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        switchEditarPocision.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 70).isActive = true
     }
     
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
