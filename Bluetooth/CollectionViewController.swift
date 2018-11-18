@@ -12,26 +12,20 @@ private let reuseIdentifier = "Cell"
 
 class CollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 
-    let label: UILabel = {
-       let label = UILabel()
-        label.text = "Choose your drink"
-        label.textColor = .orange
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+   
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "CollectionView"
         collectionView.backgroundColor = .white
         collectionView.showsHorizontalScrollIndicator = false
         
-        collectionView.addSubview(label)
-        acomodarLabel()
+       
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Register cell classes
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        self.collectionView!.register(Celda.self, forCellWithReuseIdentifier: reuseIdentifier)
 
         // Do any additional setup after loading the view.
     }
@@ -47,12 +41,6 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
     */
 
     // MARK: UICollectionViewDataSource
-    func acomodarLabel() {
-        label.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor).isActive = true
-        label.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 20).isActive = true
-        label.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        label.widthAnchor.constraint(equalToConstant: 300).isActive = true
-    }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
@@ -66,8 +54,7 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-        cell.backgroundColor = .red
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! Celda
         cell.layer.cornerRadius = 20
         cell.clipsToBounds = true
         // Configure the cell
@@ -114,4 +101,39 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
     }
     */
 
+}
+
+class Celda: UICollectionViewCell {
+    let label: UILabel = {
+        let label = UILabel()
+        label.text = "Prueba"
+        label.textAlignment = .center
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+       return label
+    }()
+    
+    // Hacemos la inicializacion de la celda utilizando un frame
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        // Llamamos a la funcion setupUI
+        setupUI()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("no se implemento coder")
+    }
+
+    func setupUI(){
+        self.backgroundColor = .blue
+        label.text = "Hola mundo"
+        label.textColor = .black
+        label.textAlignment = .center
+        self.addSubview(label)
+        label.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+        label.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+    }
+    
+    
+    
 }

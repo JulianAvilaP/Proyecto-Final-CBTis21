@@ -15,13 +15,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-        //let layout = UICollectionViewFlowLayout()
-        //layout.scrollDirection = .horizontal
+        let layout = UICollectionViewFlowLayout()
+        let vistaDeNavegacion = UINavigationController(rootViewController: CollectionViewController(collectionViewLayout: layout))
+        layout.scrollDirection = .horizontal
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
-        window?.rootViewController = ViewController()
-        //window?.rootViewController = CollectionViewController(collectionViewLayout: layout)
+        //window?.rootViewController = CollectionViewController()
+        window?.rootViewController = vistaDeNavegacion
         return true
     }
 
