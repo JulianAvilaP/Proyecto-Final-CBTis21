@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         layout.scrollDirection = .horizontal
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
-        //window?.rootViewController = CollectionViewController()
+        //window?.rootViewController = ViewController()
         window?.rootViewController = vistaDeNavegacion
         return true
     }

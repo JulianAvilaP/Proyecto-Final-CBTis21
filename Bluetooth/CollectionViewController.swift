@@ -16,7 +16,7 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "CollectionView"
+        title = "El nimo es puto"
         collectionView.backgroundColor = .white
         collectionView.showsHorizontalScrollIndicator = false
         
@@ -57,7 +57,9 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! Celda
         cell.layer.cornerRadius = 20
         cell.clipsToBounds = true
-        // Configure the cell
+        cell.boton.tag = indexPath.item
+        cell.boton.addTarget(self, action: #selector(hacerAccion(_:)), for: .touchUpInside)
+        
     
         return cell
     }
@@ -72,6 +74,9 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
     }
     // MARK: UICollectionViewDelegate
 
+    @objc func hacerAccion(_ sender: UIButton) {
+        print(sender.tag)
+    }
     /*
     // Uncomment this method to specify if the specified item should be highlighted during tracking
     override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
@@ -113,6 +118,16 @@ class Celda: UICollectionViewCell {
        return label
     }()
     
+    lazy var boton: UIButton = {
+        let boton = UIButton()
+        boton.setTitle("Click me", for: .normal)
+        boton.titleLabel?.textColor = .black
+        boton.backgroundColor = .red
+        boton.translatesAutoresizingMaskIntoConstraints = false
+        return boton
+    }()
+    
+    
     // Hacemos la inicializacion de la celda utilizando un frame
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -125,13 +140,13 @@ class Celda: UICollectionViewCell {
     }
 
     func setupUI(){
-        self.backgroundColor = .blue
-        label.text = "Hola mundo"
-        label.textColor = .black
-        label.textAlignment = .center
-        self.addSubview(label)
-        label.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
-        label.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        self.backgroundColor = .red
+        self.addSubview(boton)
+        boton.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        boton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        boton.widthAnchor.constraint(equalTo: self.widthAnchor, constant: -30).isActive = true
+        boton.heightAnchor.constraint(equalTo: self.heightAnchor, constant: -30).isActive = true
+        
     }
     
     
