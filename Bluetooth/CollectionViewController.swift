@@ -18,7 +18,16 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
         peripheralManager?.updateValue("\(0)".data(using: .utf8)!, for: caracteristica, onSubscribedCentrals: nil)
     }
     
-
+    let imagenes = [#imageLiteral(resourceName: "tornillos.jpg")]
+    
+    // MARK: Vistas
+    
+//    lazy var botonAgregarItem: UIButton = {
+//        let boton = UIButton()
+//        boton.buttonType = .
+//
+//    }()
+    
     lazy var botonCancelar: UIButton = {
         let boton = UIButton()
         boton.setTitle("Cancelar", for: .normal)
@@ -32,10 +41,12 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
     lazy var switchAnunciar: UISwitch = {
         let toggle = UISwitch()
         toggle.isOn = false
+        toggle.isEnabled = false
         toggle.addTarget(self, action: #selector(activarAnuncio(_:)), for: .valueChanged)
        return toggle
     }()
     
+    // MARK: CoreBluetooth
     
     var peripheralManager : CBPeripheralManager?
     
@@ -56,7 +67,7 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
         collectionView.showsHorizontalScrollIndicator = false
          self.peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
         self.navigationItem.setLeftBarButton(UIBarButtonItem(customView: switchAnunciar), animated: false)
-       
+        self.navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(añadirItem)), animated: false)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -76,38 +87,39 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        return nombres.count
+        return imagenes.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! Celda
+        let reconocerTap = UITapGestureRecognizer(target: self, action: #selector(imprimirBotonPulsado(_:)))
         cell.layer.cornerRadius = 20
         cell.clipsToBounds = true
-        cell.boton.tag = indexPath.item
-        cell.boton.setTitle(nombres[indexPath.item], for: .normal)
-        cell.boton.addTarget(self, action: #selector(imprimirBotonPulsado(_:)), for: .touchUpInside)
+        cell.imagen.addGestureRecognizer(reconocerTap)
+        cell.imagen.tag = indexPath.item
+        cell.imagen.image = imagenes[indexPath.item]
+        //cell.boton.setTitle(nombres[indexPath.item], for: .normal)
+        //cell.boton.addTarget(self, action: #selector(imprimirBotonPulsado(_:)), for: .touchUpInside)
         cell.cancelarPasoDelegate = self
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 1.0, left: 250 / 2, bottom: 50, right: 250 / 2)
+        return UIEdgeInsets(top: 1.0, left: 150 / 2, bottom: 5, right: 150 / 2)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 80
+        return 40
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width - 250, height: collectionView.frame.height - 270)
+        return CGSize(width: collectionView.frame.width - 150, height: collectionView.frame.height - 70           )
     }
     
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         switch peripheral.state {
         case .poweredOn:
-            //switchAnunciar.isEnabled = true
-            //peripheralManager?.startAdvertising(datosDeAnuncio)
-            //collectionView.backgroundColor = .green
+            switchAnunciar.isEnabled = true
             if seAgregoCaracteristica == false {
                 let servicio = CBMutableService(type: CBUUID.init(string: "43AB60E3-5BD1-481D-BCE0-3D35543E734F"), primary: true)
                 servicio.characteristics = [caracteristica]
@@ -116,7 +128,8 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
             }
         case .poweredOff:
             collectionView.backgroundColor = .gray
-            //switchAnunciar.isEnabled = false
+            switchAnunciar.isEnabled = false
+            switchAnunciar.isOn = false
             peripheralManager?.removeAllServices()
             peripheralManager?.stopAdvertising()
         default:
@@ -125,7 +138,7 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
     }
     
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)
         //labelEstado.textColor = .green
     }
     
@@ -135,9 +148,19 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
        // labelEstado.textColor = .gray
     }
     
-    @objc func imprimirBotonPulsado(_ sender: UIButton) {
-        print(sender.tag)
-        peripheralManager?.updateValue("\(sender.tag+1)".data(using: .utf8)!, for: caracteristica, onSubscribedCentrals: nil)
+    // MARK: Metodos
+    
+    @objc func añadirItem() {
+        print("Añadiendo item...")
+        let vistaModal = ModalViewController()
+        vistaModal.modalPresentationStyle = .overCurrentContext
+        present(vistaModal, animated: false, completion: nil)
+    }
+    
+    @objc func imprimirBotonPulsado(_ sender: AnyObject?) {
+        
+        print(sender!.view.tag)
+        peripheralManager?.updateValue("\(sender!.view.tag+1)".data(using: .utf8)!, for: caracteristica, onSubscribedCentrals: nil)
         
     }
     
@@ -163,9 +186,13 @@ class Celda: UICollectionViewCell {
     
     var cancelarPasoDelegate: SeCancelaElPaso!
     
+    
     let imagen: UIImageView = {
         let imagen = UIImageView()
-        imagen.contentMode = .scaleAspectFit
+        imagen.isUserInteractionEnabled = true
+        imagen.backgroundColor = .green
+        imagen.contentMode = .scaleAspectFill
+        imagen.translatesAutoresizingMaskIntoConstraints = false
         return imagen
     }()
     
@@ -179,14 +206,14 @@ class Celda: UICollectionViewCell {
        return boton
     }()
     
-    lazy var boton: UIButton = {
-        let boton = UIButton()
-        boton.setTitle("Click me", for: .normal)
-        boton.titleLabel?.textColor = .black
-        boton.backgroundColor = .red
-        boton.translatesAutoresizingMaskIntoConstraints = false
-        return boton
-    }()
+//    lazy var boton: UIButton = {
+//        let boton = UIButton()
+//        boton.setTitle("Click me", for: .normal)
+//        boton.titleLabel?.textColor = .black
+//        boton.backgroundColor = .red
+//        boton.translatesAutoresizingMaskIntoConstraints = false
+//        return boton
+//    }()
     
     @objc func llamarFuncionDelProtocolo() {
         cancelarPasoDelegate.cancelarPaso()
@@ -206,12 +233,20 @@ class Celda: UICollectionViewCell {
     func setupUI(){
         self.backgroundColor = .red
         
-        self.addSubview(boton)
+        //self.addSubview(boton)
+        self.addSubview(imagen)
         self.addSubview(botonCancelar)
-        boton.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-        boton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        boton.widthAnchor.constraint(equalTo: self.widthAnchor).isActive = true
-        boton.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
+//        boton.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+//        boton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+//        boton.widthAnchor.constraint(equalTo: self.widthAnchor).isActive = true
+//        boton.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
+        
+        imagen.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        imagen.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        imagen.widthAnchor.constraint(equalTo: self.widthAnchor).isActive = true
+        imagen.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
+        
+        
         botonCancelar.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         botonCancelar.widthAnchor.constraint(equalTo: self.widthAnchor).isActive = true
         botonCancelar.heightAnchor.constraint(equalToConstant: 40).isActive = true

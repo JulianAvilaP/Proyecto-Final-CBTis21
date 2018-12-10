@@ -2,15 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "tornillos.jpg",
+      "filename" : "tornillos-2.jpg",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "tornillos.jpg",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
+      "filename" : "tornillos-1.jpg",
       "scale" : "3x"
     }
   ],
