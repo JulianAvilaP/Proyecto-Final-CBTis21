@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B9157B112185147100B5729D /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9157B102185147100B5729D /* CollectionViewController.swift */; };
-		B96E4BEF2200640A00EFC65D /* Celda.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96E4BEE2200640A00EFC65D /* Celda.swift */; };
+		B96E4BEF2200640A00EFC65D /* ProductCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96E4BEE2200640A00EFC65D /* ProductCollectionViewCell.swift */; };
 		B9960EFD21BE3AEF00B12B67 /* ModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9960EFC21BE3AEF00B12B67 /* ModalViewController.swift */; };
 		B9C1259D215DF2520051C4DE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C1259C215DF2520051C4DE /* AppDelegate.swift */; };
 		B9C125A4215DF2690051C4DE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B9C125A3215DF2690051C4DE /* Assets.xcassets */; };
@@ -17,7 +17,7 @@
 
 /* Begin PBXFileReference section */
 		B9157B102185147100B5729D /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
-		B96E4BEE2200640A00EFC65D /* Celda.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Celda.swift; sourceTree = "<group>"; };
+		B96E4BEE2200640A00EFC65D /* ProductCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCollectionViewCell.swift; sourceTree = "<group>"; };
 		B9960EFC21BE3AEF00B12B67 /* ModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalViewController.swift; sourceTree = "<group>"; };
 		B9C12599215DF2520051C4DE /* Bluetooth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bluetooth.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9C1259C215DF2520051C4DE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -58,9 +58,9 @@
 			children = (
 				B9C1259C215DF2520051C4DE /* AppDelegate.swift */,
 				B9157B102185147100B5729D /* CollectionViewController.swift */,
+				B96E4BEE2200640A00EFC65D /* ProductCollectionViewCell.swift */,
 				B9960EFC21BE3AEF00B12B67 /* ModalViewController.swift */,
 				B9C125A3215DF2690051C4DE /* Assets.xcassets */,
-				B96E4BEE2200640A00EFC65D /* Celda.swift */,
 				B9C125A5215DF2690051C4DE /* LaunchScreen.storyboard */,
 				B9C125A8215DF2690051C4DE /* Info.plist */,
 			);
@@ -140,7 +140,7 @@
 				B9960EFD21BE3AEF00B12B67 /* ModalViewController.swift in Sources */,
 				B9157B112185147100B5729D /* CollectionViewController.swift in Sources */,
 				B9C1259D215DF2520051C4DE /* AppDelegate.swift in Sources */,
-				B96E4BEF2200640A00EFC65D /* Celda.swift in Sources */,
+				B96E4BEF2200640A00EFC65D /* ProductCollectionViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

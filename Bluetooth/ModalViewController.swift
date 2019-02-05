@@ -7,10 +7,11 @@
 //
 
 import UIKit
+import Photos
 
 class ModalViewController: UIViewController, UIGestureRecognizerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
-    var escogerImagenDelegate: CellCreation!
+
+    var pickImageDelegate: CellCreationProtocol!
     
     // Mark: Views
     
@@ -71,7 +72,30 @@ class ModalViewController: UIViewController, UIGestureRecognizerDelegate, UIImag
     }
     
     @objc func presentImagePickerController() {
-        present(imagePicker, animated: true, completion: nil)
+        
+        switch PHPhotoLibrary.authorizationStatus() {
+            
+        case .authorized:
+            self.present(self.imagePicker, animated: true, completion: nil)
+            
+        case .notDetermined:
+            PHPhotoLibrary.requestAuthorization({status in
+                if status == .authorized {
+                    self.present(self.imagePicker, animated: true, completion: nil)
+                } else {
+                    print("Not authorized.")
+                }
+            })
+        
+        default:
+            print("Something went wrong.")
+        }
+        
+//        let photos = PHPhotoLibrary.authorizationStatus()
+//        if photos == .notDetermined
+        
+        
+        
     }
     
     @objc func dismissView() {
@@ -80,14 +104,15 @@ class ModalViewController: UIViewController, UIGestureRecognizerDelegate, UIImag
     
     // Mark: UIImagePickerControllerDelegate
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    @objc func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
         if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            escogerImagenDelegate.get(Image: pickedImage)
+            pickImageDelegate.get(Image: pickedImage)
         }
         dismiss(animated: true, completion: nil)
     }
     
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+    @objc func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
     
@@ -114,6 +139,6 @@ class ModalViewController: UIViewController, UIGestureRecognizerDelegate, UIImag
     }
 }
 
-protocol CellCreation {
+protocol CellCreationProtocol {
     func get(Image imagen: UIImage)
 }
