@@ -15,6 +15,23 @@ class ModalViewController: UIViewController, UIGestureRecognizerDelegate, UIImag
     
     // Mark: Views
     
+    lazy var alertCheatController: UIAlertController = {
+        let alertController = UIAlertController(title: "Source", message: "Escoge la fuente puto", preferredStyle: .actionSheet)
+        let cheatControllerActions = [UIAlertAction(title: "Library", style: .default, handler: { (action) -> Void in
+            self.imagePicker.sourceType = .photoLibrary
+            self.presentImagePickerController()
+        }), UIAlertAction(title: "Camera", style: .default, handler: { (action) -> Void in self.imagePicker.sourceType = .camera
+            self.presentImagePickerController()
+        }
+            ), UIAlertAction(title: "Cancel", style: .cancel, handler: { (action) -> Void in
+                self.dismissView()
+            })]
+        alertController.addAction(cheatControllerActions[0])
+        alertController.addAction(cheatControllerActions[1])
+        alertController.addAction(cheatControllerActions[2])
+        return alertController
+    }()
+    
     lazy var addProductContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0.03393554688, alpha: 0.794921875)
@@ -37,7 +54,7 @@ class ModalViewController: UIViewController, UIGestureRecognizerDelegate, UIImag
         let button = UIButton()
         button.setTitle("Choose Photo", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.addTarget(self, action: #selector(presentImagePickerController), for: .touchUpInside)
+        button.addTarget(self, action: #selector(prepareImagePickerController), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -69,6 +86,11 @@ class ModalViewController: UIViewController, UIGestureRecognizerDelegate, UIImag
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         return touch.view == view
+    }
+    
+    @objc func prepareImagePickerController() {
+        
+        self.present(alertCheatController, animated: true, completion: nil)
     }
     
     @objc func presentImagePickerController() {

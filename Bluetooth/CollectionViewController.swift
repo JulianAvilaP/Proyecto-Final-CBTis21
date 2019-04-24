@@ -10,7 +10,7 @@ import UIKit
 import CoreBluetooth
 
 private let reuseIdentifier = "Cell"
-private let yOffsetNavigationBar: CGFloat = 32
+private var yOffsetNavigationBar: CGFloat = 32
 
 class CollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, CBPeripheralManagerDelegate, CancelOperationProtocol, CellCreationProtocol {
     
@@ -44,11 +44,11 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Elegir producto"
+        self.title = "Seleccionar producto"
         self.peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
         setupCollectionView()
         setupNavigationItem()
-
+        yOffsetNavigationBar = (navigationController?.navigationBar.frame.height)!
     }
 
     fileprivate func setupCollectionView() {
