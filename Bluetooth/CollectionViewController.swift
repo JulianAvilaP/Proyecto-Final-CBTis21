@@ -8,11 +8,12 @@
 
 import UIKit
 import CoreBluetooth
+import Photos
 
 private let reuseIdentifier = "Cell"
 private var yOffsetNavigationBar: CGFloat = 32
 
-class CollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, CBPeripheralManagerDelegate, CancelOperationProtocol, CellCreationProtocol {
+class CollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, CBPeripheralManagerDelegate, CancelOperationProtocol, UIImagePickerControllerDelegate, UINavigationControllerDelegate {	
     
     
     // Mark: Modelo
@@ -27,6 +28,28 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
         toggle.isEnabled = false
         toggle.addTarget(self, action: #selector(startAdvertising(_:)), for: .valueChanged)
         return toggle
+    }()
+    
+    lazy var alertCheatController: UIAlertController = {
+        let alertController = UIAlertController(title: "Source", message: "Choose source", preferredStyle: .actionSheet)
+        let cheatControllerActions = [UIAlertAction(title: "Library", style: .default, handler: { (action) -> Void in
+            self.imagePicker.sourceType = .photoLibrary
+            self.presentImagePickerController()
+        }), UIAlertAction(title: "Camera", style: .default, handler: { (action) -> Void in self.imagePicker.sourceType = .camera
+            self.presentImagePickerController()
+        }
+            ), UIAlertAction(title: "Cancel", style: .cancel, handler: nil)]
+        alertController.addAction(cheatControllerActions[0])
+        alertController.addAction(cheatControllerActions[1])
+        alertController.addAction(cheatControllerActions[2])
+        return alertController
+    }()
+    
+    let imagePicker: UIImagePickerController = {
+        let ip = UIImagePickerController()
+        ip.allowsEditing = false
+        ip.sourceType = .photoLibrary
+        return ip
     }()
     
     // MARK: CoreBluetooth
@@ -48,6 +71,7 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
         self.peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
         setupCollectionView()
         setupNavigationItem()
+        setupImagePickerController()
         yOffsetNavigationBar = (navigationController?.navigationBar.frame.height)!
     }
 
@@ -60,7 +84,7 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
     
     fileprivate func setupNavigationItem() {
         self.navigationItem.setLeftBarButton(UIBarButtonItem(customView: startAdvertisingSwitch), animated: false)
-        self.navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addItem)), animated: false)
+        self.navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(presentAlertCheatController)), animated: false)
     }
     
     // MARK: UICollectionViewDataSource
@@ -130,14 +154,21 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
         collectionView.backgroundColor = .gray
     }
     
-    // MARK: Methods
+    //MARK: UIImagePickerControllerDelegate
     
-    @objc func addItem() {
-        let vistaModal = ModalViewController()
-        vistaModal.pickImageDelegate = self
-        vistaModal.modalPresentationStyle = .overCurrentContext
-        present(vistaModal, animated: false, completion: nil)
+    @objc func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            get(Image: pickedImage)
+        }
+        dismiss(animated: true, completion: nil)
     }
+    
+    @objc func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    // MARK: Methods
     
     func get(Image image: UIImage) {
         imagenes.append(image)
@@ -154,6 +185,39 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
     func cancelOperation() {
         print("Cancelando paso")
         peripheralManager?.updateValue("\(0)".data(using: .utf8)!, for: characteristic, onSubscribedCentrals: nil)
+    }
+    
+    @objc func presentImagePickerController() {
+        
+        switch PHPhotoLibrary.authorizationStatus() {
+            
+        case .authorized:
+            self.present(self.imagePicker, animated: true, completion: nil)
+            
+        case .notDetermined:
+            PHPhotoLibrary.requestAuthorization({status in
+                if status == .authorized {
+                    self.present(self.imagePicker, animated: true, completion: nil)
+                } else {
+                    print("Not authorized.")
+                }
+            })
+            
+        default:
+            print("Something went wrong.")
+        }
+    }
+    
+    @objc func presentAlertCheatController() {
+        if let popOverController = alertCheatController.popoverPresentationController {
+            popOverController.barButtonItem = self.navigationItem.rightBarButtonItem
+        }
+        self.present(alertCheatController, animated: true, completion: nil)
+    }
+    
+    fileprivate func setupImagePickerController() {
+        imagePicker.delegate = self
+        imagePicker.modalPresentationStyle = .overCurrentContext
     }
     
     @objc func startAdvertising(_ sender: UISwitch) {
