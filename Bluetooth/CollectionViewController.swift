@@ -13,7 +13,7 @@ import Photos
 private let reuseIdentifier = "Cell"
 private var yOffsetNavigationBar: CGFloat = 32
 
-class CollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, CBPeripheralManagerDelegate, CancelOperationProtocol, UIImagePickerControllerDelegate, UINavigationControllerDelegate {	
+class CollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, CBPeripheralManagerDelegate, CancelOperationProtocol, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     
     // Mark: Modelo
@@ -31,14 +31,14 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
     }()
     
     lazy var alertCheatController: UIAlertController = {
-        let alertController = UIAlertController(title: "Source", message: "Choose source", preferredStyle: .actionSheet)
-        let cheatControllerActions = [UIAlertAction(title: "Library", style: .default, handler: { (action) -> Void in
+        let alertController = UIAlertController(title: "Añadir producto", message: "Selecciona el medio", preferredStyle: .actionSheet)
+        let cheatControllerActions = [UIAlertAction(title: "Biblioteca", style: .default, handler: { (action) -> Void in
             self.imagePicker.sourceType = .photoLibrary
             self.presentImagePickerController()
-        }), UIAlertAction(title: "Camera", style: .default, handler: { (action) -> Void in self.imagePicker.sourceType = .camera
+        }), UIAlertAction(title: "Tomar foto", style: .default, handler: { (action) -> Void in self.imagePicker.sourceType = .camera
             self.presentImagePickerController()
         }
-            ), UIAlertAction(title: "Cancel", style: .cancel, handler: nil)]
+            ), UIAlertAction(title: "Cancelar", style: .cancel, handler: nil)]
         alertController.addAction(cheatControllerActions[0])
         alertController.addAction(cheatControllerActions[1])
         alertController.addAction(cheatControllerActions[2])
@@ -52,7 +52,7 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
         return ip
     }()
     
-    // MARK: CoreBluetooth
+    // MARK: CoreBluetooth setup
     
     var peripheralManager : CBPeripheralManager?
     
