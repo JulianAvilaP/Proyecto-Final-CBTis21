@@ -112,7 +112,7 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
     // Mark: UICollectionViewDelegateFlowLayout
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: (38 - yOffsetNavigationBar) / 2, left: 150 / 2, bottom: (38 - yOffsetNavigationBar) / 2, right: 150 / 2)
+        return UIEdgeInsets(top: (100 - yOffsetNavigationBar) / 2, left: 300 / 2, bottom: (100 - yOffsetNavigationBar) / 2, right: 300 / 2)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -120,7 +120,7 @@ class CollectionViewController: UICollectionViewController, UICollectionViewDele
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width - 150, height: view.frame.height - 38 - yOffsetNavigationBar)
+        return CGSize(width: view.frame.width - 300, height: view.frame.height - 100 - yOffsetNavigationBar)
     }
     
     // Mark: CBPeripheralManagerDelegate
